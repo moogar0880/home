@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 from importlib import reload
 from subprocess import check_output

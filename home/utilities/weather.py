@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-import requests
+# -*- coding: utf-8 -*-
+# import requests
 
 # Max calls per day
 CPD = 500

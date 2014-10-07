@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """This module contains utilities for parallelism within the Singleton
 home.Core instance
 """
