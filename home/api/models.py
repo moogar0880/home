@@ -1,0 +1,1 @@
+from .fitness.models import *
