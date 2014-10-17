@@ -58,3 +58,6 @@ target/
 
 # Databases
 db.sqlite3
+
+# Migrations
+home/migrations
