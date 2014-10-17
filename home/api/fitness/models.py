@@ -33,7 +33,8 @@ class Exercise(models.Model):
                                               blank=True, choices=MUSCLE_GROUPS)
     category = models.CharField(max_length=1, choices=EXCERCISE_CATEGORIES)
 
-    def _drop_index(self, l):
+    @staticmethod
+    def _drop_index(l):
         """Returns index of the first index in the list less than its
         predecessor"""
 
@@ -115,6 +116,7 @@ class Exercise(models.Model):
 
 
 class Workout(models.Model):
+    """A Collection of exercises compiled into an individual workout"""
     exercises = models.ManyToManyField('Exercise', blank=True, null=True)
 
     started = models.DateTimeField(auto_now_add=True)
@@ -124,10 +126,14 @@ class Workout(models.Model):
     focus = models.CharField(max_length=2, choices=MUSCLE_GROUPS)
 
     def generate(self):
-        # return [ex.crank() for ex in self.exercises]
-        return [ex for ex in Exercise.objects.all() if ex in self.exercises.all()]
+        """'crank' out a list of specific exercises, based on the exercises
+        specified for this workout
+        """
+        return [ex.crank() for ex in Exercise.objects.all() if ex in
+                self.exercises.all()]
 
     def duration(self):
+        """Compare the end and start time for the duration of this workout"""
         return self.completed - self.started
 
     def __unicode__(self):

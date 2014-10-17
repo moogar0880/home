@@ -92,6 +92,6 @@ def get_max_from_previous(prev_weight, curr_week):
 def calc_warmup_sets(max_weight, unit='lbs'):
     """Return warm-up sets, based on top weight of the day."""
     percents = (0.4, 0.5, 0.6)
-    ceiling_func = _get_ceiling(unit)
+    ceiling_func = get_ceiling(unit)
     calc_warmups = lambda percent: ceiling_func(max_weight * percent)
     return list(map(calc_warmups, percents))
