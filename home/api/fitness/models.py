@@ -121,10 +121,11 @@ class Workout(models.Model):
     completed = models.DateTimeField(null=True, blank=True)
 
     # The target muscle group for this workout
-    focus = models.CharField(choices=MUSCLE_GROUPS)
+    focus = models.CharField(max_length=2, choices=MUSCLE_GROUPS)
 
     def generate(self):
-        return [ex.crank() for ex in self.exercises]
+        # return [ex.crank() for ex in self.exercises]
+        return [ex for ex in Exercise.objects.all() if ex in self.exercises.all()]
 
     def duration(self):
         return self.completed - self.started
