@@ -18,6 +18,7 @@ MUSCLE_GROUPS = (('CH', 'Chest'),
 class Exercise(models.Model):
     """A Base model type for storing data about a particular exercies"""
     name = models.CharField(max_length=120)
+    user_id = models.IntegerField(null=True, blank=True)
 
     # Record keeping for the last go at this exercise
     last_done = models.DateTimeField(null=True, blank=True)
@@ -113,6 +114,14 @@ class Exercise(models.Model):
                 break
         return output.format(cat, self.name)
     __str__ = __repr__ = __unicode__
+
+
+class Set:
+    def __init__(self, reps=1, set_limit=10, rep_limit=100):
+        self.reps = reps
+        self.set_limit = set_limit
+        self.rep_limit = rep_limit
+        self.sets = None
 
 
 class Workout(models.Model):

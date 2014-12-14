@@ -1,0 +1,22 @@
+{% if messages %}
+<div class="row">
+{% for message in messages %}
+<div class="col-xs-12 col-sm-6 col-md-4
+            col-sm-offset-3 col-md-offset-4">
+    <div class="alert alert-info alert-dismissible {{ message.tags }}" role="alert">
+        {# Dismiss button #}
+        <button type="button" class="close" data-dismiss="alert">
+        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+        </button>
+
+        {# TODO Expand on this to put custom message prefixes for each level #}
+        {% if message.level >= DEFAULT_MESSAGE_LEVELS.WARNING %}
+        <strong>Hey. </strong>
+        {% endif %}
+
+        {{ message }}
+    </div>
+</div>
+{% endfor %}
+</div>
+{% endif %}

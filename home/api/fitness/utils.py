@@ -1,6 +1,10 @@
 # -*- coding: utf-8 -*-
+import random
+from collections import namedtuple
+
 from .fto import (get_ceiling, get_max_from_previous, calc_warmup_sets,
                   weeks, lbs2kg)
+from .models import Exercise
 
 __author__ = 'Jon Nappi'
 
@@ -65,3 +69,35 @@ def build_sets(prev_weight, curr_week, unit='lbs', increment=0):
     if unit is 'kg':
         sets = lbs2kg(sets)
     return sets
+
+
+def select_exercises(group):
+    """Given a specified muscle *group*, generate a pseudo-random set of
+    exercises targeting that muscle group
+
+    :param group: One of the muscle groups specified in
+        fitness.models.MUSCLE_GROUPS
+    """
+    filter_args = dict(primary_muscle_group=group)
+    excs = list(Exercise.objects.filter(**filter_args).order_by('-last_done'))
+
+    selected = []
+    for index in range(10):
+        try:
+            selected.append(excs.pop(random.randint(0, len(excs))))
+        except IndexError:  # We didn't have enough exercises in this group
+            pass
+    return selected
+
+
+Set = namedtuple('Set', ['name', 'weights'])
+
+
+def generate_sets(exercises):
+    """For each exercise in *exercises*, generate sets of weights for that
+    exercise
+
+    :param exercises: A list of fitness.models.Exercise's
+    """
+    return [Set(exercise.name, build_sets(exercise.last_weight, 1)) for exercise in exercises]
+    # return [(exercise, build_sets(exercise.last_weight, 1)) for exercise in exercises]

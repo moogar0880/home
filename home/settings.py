@@ -21,8 +21,12 @@ SECRET_KEY = 'bj)lmn_2p6%u6_ar+y9+nnnvl9s4dwfud3lw((1j2+estejhw#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DIRS = (
+    os.path.join(BASE_DIR, 'home', 'templates'),
+    os.path.join(BASE_DIR, 'home', 'fitness', 'templates')
+)
 
 ALLOWED_HOSTS = []
 
@@ -49,7 +53,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'home.api.urls'
+ROOT_URLCONF = 'home.urls'
 
 WSGI_APPLICATION = 'home.wsgi.application'
 

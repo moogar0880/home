@@ -84,6 +84,8 @@ def get_max_from_previous(prev_weight, curr_week):
     # 3 => 2
     # 2 => 1
     # 1 => 3 (Skips zero)
+    if prev_weight is None:
+        prev_weight = 0
     prev_week = last_week if last_week != 0 else len(weeks) - 1
     max_weight = prev_weight / weeks[prev_week].percent
     return max_weight

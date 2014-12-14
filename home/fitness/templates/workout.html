@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container tim-container" style="max-width:800px; padding-top:100px">
+    <div><h2> Workout Generator </h2></div>
+    <form class="form-horizontal" role="form" action="/fitness/" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-group">
+            <div class="col-sm-offset-2 col-sm-6">
+              <button type="submit" class="btn btn-primary">Generate!</button>
+            </div>
+        </div>
+    </form>
+    {% if sets %}
+    <div class="container tim-container">
+    <div class="inner">
+        <div class="col-sm-4">
+            <table>
+                <tr><th><h2>Sets</h2></th></tr>
+                {% for set in sets %}
+                <tr><td><h6>{{ set.name }}: {{ set.weights }}</h6></td></tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+    </div>
+    {% endif %}
+</div>
+<div class="space"></div>
+
+{% endblock %}

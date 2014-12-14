@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load webdesign %}
+
+{% block resources %}
+    <link href="{% static 'css/home.css' %}" rel="stylesheet" />
+    <link href="{% static 'css/search.css' %}" rel="stylesheet" />
+{% endblock resources %}
+
+{% block body %}
+{# Search bar #}
+<div class="container tim-container">
+    <div class="inner">
+        <form class="main-search" action="/results/" method="post">
+            {% csrf_token %}
+            {{ form.query }}
+            {{ form.search_type }}
+            <input type="submit" value="Submit" />
+        </form>
+    </div>
+</div>
+
+{# Main wordage #}
+<div class="container tim-container" style="max-width:800px; padding-top:100px">
+   <h1 class="text-center">Awesome looking header, <br> just for us!<small class="subtitle">What, are you still reading? Go drink.</small></h1>
+   {% lorem 2 p %}
+</div>
+<div class="space"></div>
+{% endblock %}

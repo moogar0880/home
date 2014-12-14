@@ -1,70 +1,50 @@
 # -*- coding: utf-8 -*-
-import re
-import json
-import codecs
+import plistlib
+from collections import namedtuple, OrderedDict
 
 __author__ = 'Jon Nappi'
 
 
-def replace_trailing_commas(match_obj):
-    """Replace commas in matched regexes"""
-    print(match_obj)
-    return match_obj.group(0).replace(',', '')
+"""
+from itunes import Library
+l = Library()
+
+"""
 
 
-def create_dict(match_obj):
-    return '{%s}' % match_obj.group('body')
+class Library:
+    """iTunes Library interface utility class"""
+    library_path = '/Users/Jon/Desktop/iTunes Music Library.xml'
 
+    def __init__(self):
+        self.tracks = self.date = self.playlists = self.minor_version = None
+        self.major_version = self.library_persistent_id = self.features = None
+        self.show_content_ratings = self.application_version = None
+        self.music_folder = None
 
-def create_key(match_obj):
-    return '"%s":' % match_obj.group('body')
+        class attribdict(OrderedDict):
+            """Force dict keys to be sutable class attribute names"""
+            def __setitem__(self, key, value, **kwargs):
+                super().__setitem__(key.lower().replace(' ', '_'), value,
+                                    **kwargs)
 
+        with open(self.library_path, 'rb') as f:
+            library_data = plistlib.load(f, dict_type=attribdict)
 
-def create_int(match_obj):
-    return '%s,' % match_obj.group('body')
+        for key, val in library_data.items():
+            if key == 'tracks':
+                self.tracks = []
+                Track = lambda self: object()
+                for i_key in val.keys():
+                    Track = namedtuple('Track', [k for k in val[i_key].keys()])
+                    break
+                # import pdb; pdb.set_trace()
+                for track_id, track_data in val.items():
+                    self.tracks.append(Track(*[i for i in track_data]))
+            else:
+                setattr(self, key, val)
 
-
-def create_date(match_obj):
-    return '"%s",' % match_obj.group('body')
-
-
-def create_string(match_obj):
-    print('create_string')
-    return '"%s",' % match_obj.group('body').replace('"', '\"')
-
-
-def create_bool(match_obj):
-    return '%s,' % match_obj.group('body')
-
-
-def main():
-    xml = ''
-    with codecs.open('/Users/Jon/Desktop/iTunes Music Library.xml', 'r', 'utf-8') as f:
-        xml = f.read()
-    xml = '\n'.join(xml.split('\n')[3:-2])
-
-    comma_pattern = r'[,]\n\s*}'
-    dict_pattern = r'<dict>(?P<body>.*)</dict>'
-    key_pattern = r'<key>(?P<body>.*)</key>'
-    int_pattern = r'<integer>(?P<body>.*)</integer>'
-    date_pattern = r'<date>(?P<body>.*)</date>'
-    string_pattern = r'<string>(?P<body>.*)</string>'
-    bool_pattern = r'<(?P<body>true|false)/>'
-    patterns = [(dict_pattern, create_dict),
-                (key_pattern, create_key), (int_pattern, create_int),
-                (date_pattern, create_date), (string_pattern, create_string),
-                (bool_pattern, create_bool),
-                (comma_pattern, replace_trailing_commas)]
-
-    for pattern, function in patterns:
-        xml = re.sub(pattern, function, xml)
-    xml = xml.replace('<dict>', '{').replace('</dict>', '},')
-    xml = xml.replace(',\n\t\t}', '\n\t\t}')
-    with codecs.open('/Users/Jon/Desktop/iTunes Music Library.json', 'w', 'utf-8') as f:
-        f.write(xml)
-    xml_dict = json.loads(xml)
-    print(len(xml_dict))
-
-
-if __name__ == '__main__':
-    main()
+    @property
+    def tv_shows(self):
+        """A list of TV Shows contained in this iTunes library"""
+        return [track for track in self.tracks if track.tv_show]
