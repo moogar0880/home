@@ -99,5 +99,5 @@ def generate_sets(exercises):
 
     :param exercises: A list of fitness.models.Exercise's
     """
-    return [Set(exercise.name, build_sets(exercise.last_weight, 1)) for exercise in exercises]
-    # return [(exercise, build_sets(exercise.last_weight, 1)) for exercise in exercises]
+    return [Set(exercise.name, build_sets(exercise.last_weight, 1))
+            for exercise in exercises]
