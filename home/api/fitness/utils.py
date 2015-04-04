@@ -84,7 +84,18 @@ def select_exercises(group):
     selected = []
     for index in range(10):
         try:
-            selected.append(excs.pop(random.randint(0, len(excs))))
+            exercise = excs.pop(random.randint(0, len(excs)))
+            if exercise.last_weight is None and exercise.last_reps is None:
+                pass
+            elif exercise.last_weight is None:
+                increase = exercise.last_reps * exercise.progress_differential
+                exercise.last_reps += increase
+                exercise.save()
+            elif exercise.last_reps is None:
+                increase = exercise.last_weight * exercise.progress_differential
+                exercise.last_weight += increase
+                exercise.save()
+            selected.append(exercise)
         except IndexError:  # We didn't have enough exercises in this group
             pass
     return selected

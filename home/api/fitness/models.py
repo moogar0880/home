@@ -26,7 +26,7 @@ class Exercise(models.Model):
     last_reps = models.IntegerField(null=True, blank=True)
 
     # The rate at which weight/reps for this excercise should be increased by
-    progress_differential = models.IntegerField(null=True, blank=True)
+    progress_differential = models.FloatField(null=True, blank=True)
 
     # Categorization fields
     primary_muscle_group = models.CharField(max_length=2, choices=MUSCLE_GROUPS)
@@ -134,12 +134,18 @@ class Workout(models.Model):
     # The target muscle group for this workout
     focus = models.CharField(max_length=2, choices=MUSCLE_GROUPS)
 
-    def generate(self):
+    def generate_crank(self):
         """'crank' out a list of specific exercises, based on the exercises
         specified for this workout
         """
         return [ex.crank() for ex in Exercise.objects.all() if ex in
                 self.exercises.all()]
+
+    def generate(self):
+        """Generate a list of exercises for a workout"""
+        workouts = []
+
+        return workouts
 
     def duration(self):
         """Compare the end and start time for the duration of this workout"""
